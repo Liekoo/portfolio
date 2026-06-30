@@ -1,692 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cristian - Build Log</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #14171a;
-      --bg-raised: #1b1f23;
-      --line: #2a2f35;
-      --text: #e8e6e1;
-      --text-dim: #8b9099;
-      --amber: #ff8a3d;
-      --green: #5fa777;
-      --blue: #6b8cae;
-      --red: #d9706a;
-      --mono: "IBM Plex Mono", monospace;
-      --sans: "IBM Plex Sans", sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        scroll-behavior: auto !important;
-        transition: none !important;
-      }
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .wrap {
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid var(--line);
-      background: rgba(20, 23, 26, 0.92);
-      padding: 18px 0;
-      backdrop-filter: blur(6px);
-    }
-
-    .topbar .wrap {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .brand {
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-    }
-
-    .brand .dot,
-    .foot-mono .command {
-      color: var(--green);
-    }
-
-    .nav {
-      display: flex;
-      gap: 22px;
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-
-    .nav a,
-    .foot-links a,
-    .commit-footer a {
-      text-decoration: none;
-    }
-
-    .nav a:hover,
-    .foot-links a:hover {
-      color: var(--amber);
-    }
-
-    .hero {
-      border-bottom: 1px solid var(--line);
-      padding: 64px 0 40px;
-    }
-
-    .prompt-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      color: var(--green);
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 8px;
-      height: 16px;
-      background: var(--green);
-      animation: blink 1.1s step-end infinite;
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    h1 {
-      max-width: 680px;
-      font-family: var(--mono);
-      font-size: clamp(28px, 5vw, 44px);
-      font-weight: 700;
-      letter-spacing: 0;
-      line-height: 1.25;
-    }
-
-    .accent {
-      color: var(--amber);
-    }
-
-    .hero .sub {
-      max-width: 560px;
-      margin-top: 18px;
-      color: var(--text-dim);
-      font-size: 16px;
-    }
-
-    .hero-links,
-    .repo-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 28px;
-    }
-
-    .btn {
-      border: 1px solid var(--line);
-      border-radius: 3px;
-      padding: 9px 16px;
-      font-family: var(--mono);
-      font-size: 13px;
-      text-decoration: none;
-      transition: border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
-    }
-
-    .btn:hover {
-      border-color: var(--amber);
-      color: var(--amber);
-    }
-
-    .btn.primary {
-      border-color: var(--amber);
-      background: var(--amber);
-      color: var(--bg);
-      font-weight: 600;
-    }
-
-    .btn.primary:hover {
-      color: var(--bg);
-      opacity: 0.88;
-    }
-
-    .stats {
-      border-bottom: 1px solid var(--line);
-    }
-
-    .stats .wrap {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      padding: 0 24px;
-    }
-
-    .stat {
-      border-right: 1px solid var(--line);
-      padding: 20px 0 20px 24px;
-    }
-
-    .stat:first-child {
-      padding-left: 0;
-    }
-
-    .stat:last-child {
-      border-right: 0;
-    }
-
-    .num {
-      color: var(--blue);
-      font-family: var(--mono);
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .label,
-    .col-label {
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .section {
-      border-bottom: 1px solid var(--line);
-      padding: 56px 0;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 28px;
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .section-head::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--line);
-    }
-
-    .commit {
-      overflow: hidden;
-      margin-bottom: 18px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      background: var(--bg-raised);
-    }
-
-    .commit-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 16px 20px;
-    }
-
-    .commit-hash {
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: 12px;
-    }
-
-    .commit-title {
-      margin-left: 10px;
-      font-family: var(--mono);
-      font-size: 17px;
-      font-weight: 600;
-    }
-
-    .commit-tag {
-      border: 1px solid currentColor;
-      border-radius: 10px;
-      padding: 2px 8px;
-      font-family: var(--mono);
-      font-size: 11px;
-    }
-
-    .tag-prod,
-    .feat {
-      color: var(--green);
-    }
-
-    .tag-firmware,
-    .perf {
-      color: var(--blue);
-    }
-
-    .fix,
-    .minus {
-      color: var(--red);
-    }
-
-    .commit-body {
-      max-width: 680px;
-      padding: 0 20px 18px;
-      color: var(--text-dim);
-      font-size: 14.5px;
-    }
-
-    .commit-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 0 20px 20px;
-    }
-
-    .chip {
-      border: 1px solid var(--line);
-      border-radius: 3px;
-      background: var(--bg);
-      padding: 4px 10px;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 11.5px;
-    }
-
-    .diffstat {
-      display: flex;
-      gap: 18px;
-      border-top: 1px dashed var(--line);
-      padding: 10px 20px;
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: 12px;
-    }
-
-    .plus {
-      color: var(--green);
-    }
-
-    .commit-footer {
-      padding: 0 20px 20px;
-    }
-
-    .commit-footer a {
-      border-bottom: 1px solid transparent;
-      color: var(--amber);
-      font-family: var(--mono);
-      font-size: 12.5px;
-    }
-
-    .commit-footer a:hover {
-      border-color: var(--amber);
-    }
-
-    .android-intro {
-      max-width: 640px;
-      margin-bottom: 24px;
-      color: var(--text-dim);
-      font-size: 14.5px;
-    }
-
-    .android-intro strong {
-      color: var(--text);
-    }
-
-    .log-entry {
-      display: flex;
-      gap: 16px;
-      border-bottom: 1px solid var(--line);
-      padding: 14px 0;
-    }
-
-    .log-entry:last-of-type {
-      border-bottom: 0;
-    }
-
-    .log-marker {
-      width: 90px;
-      flex-shrink: 0;
-      padding-top: 2px;
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: 12px;
-    }
-
-    .log-title {
-      margin-bottom: 3px;
-      font-size: 14.5px;
-      font-weight: 600;
-    }
-
-    .log-desc,
-    .about-col p {
-      color: var(--text-dim);
-      font-size: 13.5px;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
-    }
-
-    .col-label {
-      margin-bottom: 10px;
-      letter-spacing: 0.06em;
-    }
-
-    .about-col p {
-      font-size: 14.5px;
-    }
-
-    .about-col p + p {
-      margin-top: 10px;
-    }
-
-    footer {
-      padding: 40px 0 60px;
-    }
-
-    footer .wrap {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .foot-mono {
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: 12px;
-    }
-
-    .foot-links {
-      display: flex;
-      gap: 18px;
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-
-    @media (max-width: 760px) {
-      .topbar .wrap {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 2px;
-      }
-
-      .stats .wrap,
-      .about-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .stat:nth-child(2) {
-        border-right: 0;
-      }
-
-      .stat:nth-child(3) {
-        padding-left: 0;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .wrap,
-      .stats .wrap {
-        padding-right: 18px;
-        padding-left: 18px;
-      }
-
-      .hero {
-        padding-top: 44px;
-      }
-
-      .stats .wrap,
-      .about-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stat,
-      .stat:nth-child(3) {
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-        padding-left: 0;
-      }
-
-      .stat:last-child {
-        border-bottom: 0;
-      }
-
-      .commit-title {
-        display: block;
-        margin: 6px 0 0;
-      }
-
-      .diffstat {
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .log-entry {
-        display: block;
-      }
-
-      .log-marker {
-        width: auto;
-        margin-bottom: 4px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cristian — Build Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #14171A;
+    --bg-raised: #1B1F23;
+    --line: #2A2F35;
+    --text: #E8E6E1;
+    --text-dim: #8B9099;
+    --amber: #FF8A3D;
+    --green: #5FA777;
+    --blue: #6B8CAE;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+  a{color:inherit;}
+
+  .wrap{ max-width:880px; margin:0 auto; padding:0 24px; }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    border-bottom:1px solid var(--line);
+    padding:18px 0;
+    position:sticky; top:0;
+    background:rgba(20,23,26,0.92);
+    backdrop-filter:blur(6px);
+    z-index:10;
+  }
+  .topbar .wrap{ display:flex; justify-content:space-between; align-items:center; }
+  .brand{ font-family:var(--mono); font-weight:600; font-size:14px; letter-spacing:0.02em; }
+  .brand .dot{ color:var(--green); }
+  .nav{ display:flex; gap:22px; font-family:var(--mono); font-size:13px; color:var(--text-dim); }
+  .nav a{ text-decoration:none; }
+  .nav a:hover{ color:var(--amber); }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:64px 0 40px; border-bottom:1px solid var(--line); }
+  .prompt-line{
+    font-family:var(--mono); font-size:13px; color:var(--green); margin-bottom:18px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .prompt-line .cursor{
+    display:inline-block; width:8px; height:16px; background:var(--green);
+    animation:blink 1.1s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+  h1{
+    font-family:var(--mono); font-weight:700;
+    font-size:clamp(28px,5vw,44px);
+    line-height:1.25;
+    letter-spacing:-0.01em;
+    max-width:680px;
+  }
+  h1 .accent{ color:var(--amber); }
+  .hero p.sub{
+    margin-top:18px; color:var(--text-dim); font-size:16px; max-width:560px;
+  }
+  .hero-links{ margin-top:28px; display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--mono); font-size:13px; padding:9px 16px;
+    border:1px solid var(--line); border-radius:3px;
+    transition:border-color .15s ease, color .15s ease;
+    text-decoration:none;
+  }
+  .btn:hover{ border-color:var(--amber); color:var(--amber); }
+  .btn.primary{ background:var(--amber); color:#14171A; border-color:var(--amber); font-weight:600;}
+  .btn.primary:hover{ opacity:0.88; color:#14171A; }
+
+  /* ---------- stats strip ---------- */
+  .stats{ display:flex; gap:0; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+  .stat{
+    flex:1; min-width:140px; padding:20px 24px; border-right:1px solid var(--line);
+  }
+  .stat:last-child{ border-right:none; }
+  .stat .num{ font-family:var(--mono); font-size:22px; font-weight:700; color:var(--blue); }
+  .stat .label{ font-family:var(--mono); font-size:11px; color:var(--text-dim); margin-top:4px; text-transform:uppercase; letter-spacing:0.04em;}
+
+  /* ---------- section heads ---------- */
+  .section{ padding:56px 0; border-bottom:1px solid var(--line); }
+  .section-head{
+    font-family:var(--mono); font-size:12px; color:var(--text-dim);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:28px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-head::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  /* ---------- commit entries ---------- */
+  .commit{
+    border:1px solid var(--line); border-radius:4px; margin-bottom:18px;
+    background:var(--bg-raised); overflow:hidden;
+  }
+  .commit-link{
+    display:block; text-decoration:none; color:inherit;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .commit-link:hover{
+    border-color:var(--amber); transform:translateY(-1px);
+  }
+  .commit-head{
+    padding:16px 20px; display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;
+  }
+  .commit-hash{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+  .commit-title{ font-family:var(--mono); font-weight:600; font-size:17px; }
+  .commit-tag{
+    font-family:var(--mono); font-size:11px; padding:2px 8px; border-radius:10px;
+    border:1px solid currentColor; white-space:nowrap;
+  }
+  .tag-prod{ color:var(--green); }
+  .tag-firmware{ color:var(--blue); }
+  .commit-body{ padding:0 20px 18px; color:var(--text-dim); font-size:14.5px; max-width:680px; }
+  .commit-stack{ padding:0 20px 20px; display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{
+    font-family:var(--mono); font-size:11.5px; color:var(--text); background:var(--bg);
+    border:1px solid var(--line); padding:4px 10px; border-radius:3px;
+  }
+  .diffstat{
+    font-family:var(--mono); font-size:12px; padding:10px 20px;
+    border-top:1px dashed var(--line); display:flex; gap:18px; color:var(--text-dim); flex-wrap:wrap;
+  }
+  .diffstat .plus{ color:var(--green); }
+  .diffstat .minus{ color:#D9706A; }
+  .commit-footer{ padding:0 20px 20px; }
+  .commit-footer a{ font-family:var(--mono); font-size:12.5px; color:var(--amber); text-decoration:none; border-bottom:1px solid transparent;}
+  .commit-footer a:hover{ border-color:var(--amber); }
+
+  /* ---------- changelog (ROM) ---------- */
+  .log-entry{
+    display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--line);
+  }
+  .log-entry:last-child{ border-bottom:none; }
+  .log-marker{
+    font-family:var(--mono); font-size:11px; color:var(--text-dim);
+    width:64px; flex-shrink:0; padding-top:2px; text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  .log-marker.fix{ color:#D9706A; }
+  .log-marker.feat{ color:var(--green); }
+  .log-marker.perf{ color:var(--blue); }
+  .log-content{ flex:1; min-width:0; }
+  .log-content .log-title{ font-weight:600; font-size:14.5px; margin-bottom:3px; }
+  .log-content .log-desc{ color:var(--text-dim); font-size:13.5px; }
+  .log-content .log-link{
+    font-family:var(--mono); font-size:12.5px; color:var(--amber); text-decoration:none;
+    display:inline-block; margin-top:6px;
+  }
+  .log-content .log-link:hover{ text-decoration:underline; }
+
+  .repo-links{ display:flex; gap:16px; margin-top:24px; flex-wrap:wrap; }
+
+  /* ---------- about ---------- */
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  @media (max-width:640px){ .about-grid{ grid-template-columns:1fr; } .stat{ flex:1 1 50%; } }
+  .about-col .col-label{ font-family:var(--mono); font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;}
+  .about-col p{ font-size:14.5px; color:var(--text-dim); }
+  .about-col p + p{ margin-top:10px; }
+
+  /* ---------- footer ---------- */
+  footer{ padding:40px 0 60px; }
+  footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;}
+  .foot-mono{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+  .foot-links{ display:flex; gap:18px; font-family:var(--mono); font-size:13px; }
+  .foot-links a{ text-decoration:none; }
+  .foot-links a:hover{ color:var(--amber); }
+
+  @media (max-width:560px){
+    .log-entry{ flex-direction:column; gap:4px; }
+    .log-marker{ width:auto; }
+  }
+</style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="wrap">
-      <div class="brand"><span class="dot">o</span> liekoo<span style="color: var(--text-dim);">@</span>build</div>
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="#web">web apps</a>
-        <a href="#android">android</a>
-        <a href="#about">about</a>
-        <a href="#contact">contact</a>
-      </nav>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot">●</span> liekoo<span style="color:var(--text-dim)">@</span>build</div>
+    <div class="nav">
+      <a href="#web">web apps</a>
+      <a href="#android">android</a>
+      <a href="#about">about</a>
+      <a href="#contact">contact</a>
     </div>
   </div>
+</div>
 
-  <header class="hero">
-    <div class="wrap">
-      <div class="prompt-line">~/portfolio $ whoami<span class="cursor"></span></div>
-      <h1>BS IT undergrad who ships <span class="accent">device trees</span>, <span class="accent">build fixes</span>, and full-stack web apps.</h1>
-      <p class="sub">Cristian (Liekoo) - 4th-year Information Technology student, East Systems Colleges of Rizal. Android device tree maintainer for the Redmi Note 13 4G (sapphire) on Evolution X and LineageOS, plus full-stack PHP/MySQL builds for local businesses.</p>
-      <div class="hero-links">
-        <a class="btn primary" href="https://github.com/Liekoo" target="_blank" rel="noopener">View GitHub -></a>
-        <a class="btn" href="https://gitlab.com/Liekoo" target="_blank" rel="noopener">GitLab</a>
-        <a class="btn" href="#contact">Contact</a>
+<header class="hero">
+  <div class="wrap">
+    <div class="prompt-line">~/portfolio $ whoami<span class="cursor"></span></div>
+    <h1>BS IT undergrad who ships <span class="accent">ROMs</span>,<span class="accent"> and Web Apps.</span></h1>
+    <p class="sub">Cristian (Liekoo) — 4th-year Information Technology student, irregular student at East Systems Colleges of Rizal. Career shifter from BS Accounting to BS IT, exposed to Android development maintaining device tree structure for the Redmi Note 13 4G (sapphire) on Evolution X and Project Infinity X, plus full-stack HTML/CSS/JavaScript and PHP/MySQL web development projects for local businesses.</p>
+    <div class="hero-links">
+      <a class="btn primary" href="https://github.com/Liekoo" target="_blank" rel="noopener">View GitHub →</a>
+      <a class="btn" href="https://gitlab.com/Liekoo" target="_blank" rel="noopener">GitLab</a>
+      <a class="btn" href="mailto:cristianervini.reyes@gmail.com">Email</a>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="wrap" style="display:flex; width:100%; padding:0;">
+    <div class="stat"><div class="num">4th yr</div><div class="label">BS IT</div></div>
+    <div class="stat"><div class="num">1</div><div class="label">Web app shipped</div></div>
+    <div class="stat"><div class="num">1</div><div class="label">Device maintained</div></div>
+    <div class="stat"><div class="num">2</div><div class="label">ROMs supported</div></div>
+  </div>
+</div>
+
+<section class="section" id="web">
+  <div class="wrap">
+    <div class="section-head">01 / web applications</div>
+
+    <a class="commit commit-link" href="https://github.com/Liekoo/AWD-System" target="_blank" rel="noopener">
+      <div class="commit-head">
+        <div>
+          <span class="commit-hash">a13fce2</span>
+          <span class="commit-title" style="margin-left:10px;">AquaLuxe — Water Refilling Station Management System</span>
+        </div>
+        <span class="commit-tag tag-prod">deployed</span>
+      </div>
+      <div class="commit-body">
+        Full PHP/MySQL operations platform for a water refilling business: customer ordering, staff and admin order management, batch delivery dispatch, and proof-of-delivery upload. Integrated PayMongo for GCash and QR Ph payments so customers can pay online end to end.
+      </div>
+      <div class="commit-stack">
+        <span class="chip">PHP</span><span class="chip">MySQL</span><span class="chip">PayMongo API</span><span class="chip">GCash</span><span class="chip">QR Ph</span>
+      </div>
+      <div class="diffstat">
+        <span><span class="plus">+</span> online payments</span>
+        <span><span class="plus">+</span> delivery dispatch</span>
+        <span><span class="plus">+</span> proof-of-delivery</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="section" id="android">
+  <div class="wrap">
+    <div class="section-head">02 / android · sapphire (Redmi Note 13 4G)</div>
+    <p style="color:var(--text-dim); font-size:14.5px; max-width:640px; margin-bottom:24px;">
+      Volunteer Android developer for <strong style="color:var(--text)">sapphire</strong> (SM6225 / Bengal SoC), shipping Evolution X and Project Infinity X to a global Android community of thousands of users. Responsibilities include ongoing maintenance of device trees, kernel patches, and vendor HAL integration including under-display fingerprint sensor (UDFPS) support.
+    </p>
+
+    <a class="commit commit-link" href="https://github.com/lycodump" target="_blank" rel="noopener">
+      <div class="commit-head">
+        <div>
+          <span class="commit-title">Redmi Note 13 4G/NFC Resources</span>
+        </div>
+        <span class="commit-tag tag-prod">public repositories</span>
+      </div>
+      <div class="commit-body">
+        Device tree, kernel, and vendor resources for sapphire (SM6225/Bengal), shared with and maintained alongside the lycodump organization.
+      </div>
+      <div class="commit-stack">
+        <span class="chip">C</span><span class="chip">C++</span><span class="chip">Java</span><span class="chip">Python</span><span class="chip">Shell</span><span class="chip">Smali</span>
+      </div>
+    </a>
+
+    <div class="log-entry">
+      <div class="log-marker feat">feat</div>
+      <div class="log-content">
+        <div class="log-title">FastCharge system app (com.android.fastcharge)</div>
+        <div class="log-desc">Built and adapted a kernel-based charging node specifically for sapphire, originally using other devices as a base, with a persistent START_STICKY service to work around a kernel JEITA_VOTER reset that kept reverting the charge mode.</div>
       </div>
     </div>
-  </header>
 
-  <section class="stats" aria-label="Portfolio stats">
-    <div class="wrap">
-      <div class="stat"><div class="num">2</div><div class="label">Web apps shipped</div></div>
-      <div class="stat"><div class="num">1</div><div class="label">Device maintained</div></div>
-      <div class="stat"><div class="num">2</div><div class="label">ROMs supported</div></div>
-      <div class="stat"><div class="num">4th yr</div><div class="label">BS IT</div></div>
+    <div class="log-entry">
+      <div class="log-marker perf">perf</div>
+      <div class="log-content">
+        <div class="log-title">powerhint.json / scheduler tuning</div>
+        <div class="log-desc">Tuned WALT and uclamp behavior following SD680-class conservative mid-table frequency anchoring, and diagnosed audio crackling tied to power state transitions.</div>
+      </div>
     </div>
-  </section>
 
-  <main>
-    <section class="section" id="web">
-      <div class="wrap">
-        <div class="section-head">01 / web applications</div>
-
-        <article class="commit">
-          <div class="commit-head">
-            <div>
-              <span class="commit-hash">a13fce2</span>
-              <span class="commit-title">AquaLuxe - Water Refilling Station Management System</span>
-            </div>
-            <span class="commit-tag tag-prod">deployed</span>
-          </div>
-          <p class="commit-body">Full PHP/MySQL operations platform for a water refilling business: customer ordering, staff and admin order management, batch delivery dispatch, and proof-of-delivery upload. Integrated PayMongo for GCash and QR Ph payments so customers can pay online end to end.</p>
-          <div class="commit-stack">
-            <span class="chip">PHP</span>
-            <span class="chip">MySQL</span>
-            <span class="chip">PayMongo API</span>
-            <span class="chip">GCash</span>
-            <span class="chip">QR Ph</span>
-          </div>
-          <div class="diffstat">
-            <span><span class="plus">+</span> online payments</span>
-            <span><span class="plus">+</span> delivery dispatch</span>
-            <span><span class="plus">+</span> proof-of-delivery</span>
-          </div>
-        </article>
-
-        <article class="commit">
-          <div class="commit-head">
-            <div>
-              <span class="commit-hash">7d40b91</span>
-              <span class="commit-title">Sip &amp; Savor - Milk Tea Shop Platform</span>
-            </div>
-            <span class="commit-tag tag-prod">deployed</span>
-          </div>
-          <p class="commit-body">Role-based PHP/MySQL web app for a milk tea shop covering Admin, Staff, and Customer access tiers. Built a "Sip Credits" wallet system for in-app balance and rewards, GPS-based delivery address detection via OpenStreetMap, and deployed live on InfinityFree.</p>
-          <div class="commit-stack">
-            <span class="chip">PHP</span>
-            <span class="chip">MySQL</span>
-            <span class="chip">OpenStreetMap</span>
-            <span class="chip">Role-based Access</span>
-          </div>
-          <div class="diffstat">
-            <span><span class="plus">+</span> wallet system</span>
-            <span><span class="plus">+</span> GPS delivery</span>
-            <span><span class="plus">+</span> live deploy</span>
-          </div>
-        </article>
+    <div class="log-entry">
+      <div class="log-marker feat">feat</div>
+      <div class="log-content">
+        <div class="log-title">UdfpsHandler.cpp — under-display fingerprint sensor</div>
+        <div class="log-desc">Adapted an existing UDFPS handler implementation and integrated it into sm6225-common, bridging the vendor fingerprint HAL with AOSP's display-side UDFPS overlay so the in-display sensor responds correctly on our platform.</div>
+        <a class="log-link" href="https://github.com/lycodump/android_device_xiaomi_sm6225-common/commit/8d1322c48b22e28b155478c3dd9234e3c24e6e65" target="_blank" rel="noopener">view commit →</a>
       </div>
-    </section>
+    </div>
 
-    <section class="section" id="android">
-      <div class="wrap">
-        <div class="section-head">02 / android - sapphire (Redmi Note 13 4G)</div>
-        <p class="android-intro">Volunteer device tree maintainer for <strong>sapphire</strong> (SM6225 / Bengal SoC) across Evolution X and LineageOS. Selected log entries from ongoing maintenance work:</p>
+    <div class="repo-links">
+      <a class="btn" href="https://github.com/lycodump/android_device_xiaomi_sm6225-common/commits/16-qpr1-inf/udfps/UdfpsHandler.cpp" target="_blank" rel="noopener">udfps commit history →</a>
+      <a class="btn" href="https://github.com/lycodump/repositories" target="_blank" rel="noopener">device tree structure repos →</a>
+      <a class="btn" href="https://gitlab.com/Liekoo" target="_blank" rel="noopener">gitlab mirror →</a>
+    </div>
+  </div>
+</section>
 
-        <article class="log-entry">
-          <div class="log-marker feat">feat</div>
-          <div class="log-content">
-            <h2 class="log-title">FastCharge system app (com.android.fastcharge)</h2>
-            <p class="log-desc">Built a sysfs-based charging mode control app from scratch, including a persistent START_STICKY service to work around a kernel JEITA_VOTER reset that kept reverting the charge mode.</p>
-          </div>
-        </article>
-
-        <article class="log-entry">
-          <div class="log-marker fix">fix</div>
-          <div class="log-content">
-            <h2 class="log-title">Camera HAL SIGSEGV crashes</h2>
-            <p class="log-desc">Traced crashes to GraphicBuffer ABI mismatches and a stale sceneDetection.xml; patched MiuiCamera APK at the smali level, resolving VerifyError and register allocation issues across multiple APK versions.</p>
-          </div>
-        </article>
-
-        <article class="log-entry">
-          <div class="log-marker fix">fix</div>
-          <div class="log-content">
-            <h2 class="log-title">SELinux sepolicy: genfscon conflicts</h2>
-            <p class="log-desc">Resolved build-blocking genfscon conflicts and wrote the FastCharge app domain policy and persist.fastcharge property rules.</p>
-          </div>
-        </article>
-
-        <article class="log-entry">
-          <div class="log-marker perf">perf</div>
-          <div class="log-content">
-            <h2 class="log-title">powerhint.json / scheduler tuning</h2>
-            <p class="log-desc">Tuned WALT and uclamp behavior following SD680-class conservative mid-table frequency anchoring, and diagnosed audio crackling tied to power state transitions.</p>
-          </div>
-        </article>
-
-        <article class="log-entry">
-          <div class="log-marker feat">feat</div>
-          <div class="log-content">
-            <h2 class="log-title">GKI kernel porting</h2>
-            <p class="log-desc">Converted devicetree fragments and built a standalone kernel with corrected clang/LLVM flags, resolving Soong build errors in the process.</p>
-          </div>
-        </article>
-
-        <div class="repo-links">
-          <a class="btn" href="https://github.com/Liekoo" target="_blank" rel="noopener">device tree repos -></a>
-          <a class="btn" href="https://gitlab.com/Liekoo" target="_blank" rel="noopener">gitlab mirror -></a>
-        </div>
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head">03 / about</div>
+    <div class="about-grid">
+      <div class="about-col">
+        <div class="col-label">Background</div>
+        <p>4th-year BS Information Technology student at East Systems Colleges of Rizal, based in Rizal, Philippines. Came into IT from an accounting background, which still shapes how I approach structured, numerical problems.</p>
+        <p>Currently preparing for an IT internship — exploring Coding/Networking side of the industry and refining how I present this work to recruiters.</p>
       </div>
-    </section>
-
-    <section class="section" id="about">
-      <div class="wrap">
-        <div class="section-head">03 / about</div>
-        <div class="about-grid">
-          <div class="about-col">
-            <div class="col-label">Background</div>
-            <p>4th-year BS Information Technology student at East Systems Colleges of Rizal, based in Rizal, Philippines. Came into IT from an accounting background, which still shapes how I approach structured, numerical problems.</p>
-            <p>Currently preparing for an IT internship - exploring QA Tester / Software Developer dual-role positions and refining how I present this work to recruiters.</p>
-          </div>
-          <div class="about-col">
-            <div class="col-label">How I work</div>
-            <p>Most of my Android work lives at the intersection of build systems, kernel internals, and reverse-engineered smali patches - debugging is usually closer to forensics than feature work.</p>
-            <p>On the web app side, I prefer shipping something a real business can use immediately: live payments, real delivery workflows, not just demos.</p>
-          </div>
-        </div>
+      <div class="about-col">
+        <div class="col-label">How I work</div>
+        <p>Most of my Android work consists of interacting high-end servers used for compiling operating systems funded by the community, and much of my daily work is debugging back-end android operating system components, adding new features, reverse-engineered blobs and closed-source frameworks.</p>
+        <p>On the web app side, I prefer shipping something a real business can use immediately use: Inventory management, live payments, real delivery workflows, not just demos.</p>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
+</section>
 
-  <footer id="contact">
-    <div class="wrap">
-      <div class="foot-mono">~/portfolio $ <span class="command">echo</span> "let's build something"</div>
-      <div class="foot-links">
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="section-head">04 / Contact</div>
+    <div class="about-grid">
+      <div class="about-col">
+        <div class="col-label">Connect With Me:</div>
         <a href="https://github.com/Liekoo" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://gitlab.com/Liekoo" target="_blank" rel="noopener">GitLab</a>
+        <a href="https://gitlab.com/Liekoo" target="_blank" rel="noopener">GitLab</a><br>
+        <a href="https://t.me/@Liieko" target="_blank" rel="noopener">Telegram</a>
+
+      </div>
+      <div class="about-col">
+        <div class="col-label">Email</div>
+        <a href="mailto:cristianervini.reyes@gmail.com">cristianervini.reyes@gmail.com</a>
       </div>
     </div>
-  </footer>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-mono">~/portfolio $ <span style="color:var(--green)">echo</span> "Keep Evolving"</div><br>
+    <div class="foot-mono">~/portfolio $ <span style="color:var(--green)">echo</span> "All credits to those who help me"</div>
+  </div>
+</footer>
+
 </body>
 </html>
